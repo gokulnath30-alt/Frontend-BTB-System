@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
               <Link to="/history" className={`nav-link ${isActive('/history') ? 'active' : ''}`}>
                 <Ticket size={16} /> My Bookings
               </Link>
-              {user.role === 'ADMIN' && user.email?.toLowerCase() === 'admin@busticket.com' && (
+              {user.role === 'ADMIN' && (user.email?.toLowerCase() === 'admin@busticket.com' || user.email?.toLowerCase() === 'admin@example.com') && (
                 <Link to="/admin" className={`nav-link ${isActive('/admin') ? 'active' : ''}`}>
                   <Shield size={16} style={{ color: '#f59e0b' }} /> Admin Panel
                 </Link>

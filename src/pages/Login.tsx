@@ -163,7 +163,10 @@ const Login: React.FC<LoginProps> = ({ defaultModule = 'USER' }) => {
 
       // Enforce role authorization per module
       if (activeModule === 'ADMIN') {
-        const isMasterAdmin = userRole === 'ADMIN' && userData.email.toLowerCase() === 'admin@busticket.com';
+        const isMasterAdmin = userRole === 'ADMIN' && (
+          userData.email.toLowerCase() === 'admin@busticket.com' ||
+          userData.email.toLowerCase() === 'admin@example.com'
+        );
         if (!isMasterAdmin) {
           setError('Access Denied: Only the designated System Administrator (admin@busticket.com) is permitted to access the Admin Console.');
           setLoading(false);

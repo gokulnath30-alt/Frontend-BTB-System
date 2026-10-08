@@ -21,9 +21,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles 
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Single Admin Enforcement: Only admin@busticket.com can access ADMIN-only routes
+  // Single Admin Enforcement: Only admin@busticket.com or admin@example.com can access ADMIN-only routes
   if (allowedRoles && allowedRoles.includes('ADMIN') && !allowedRoles.includes('USER') && !allowedRoles.includes('OPERATOR')) {
-    if (user?.role !== 'ADMIN' || user?.email?.toLowerCase() !== 'admin@busticket.com') {
+    const email = user?.email?.toLowerCase();
+    if (user?.role !== 'ADMIN' || (email !== 'admin@busticket.com' && email !== 'admin@example.com')) {
       return <Navigate to="/admin/login" replace />;
     }
   }
