@@ -1,7 +1,20 @@
 import axios from 'axios';
 
+let apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+
+// Automatically enforce HTTPS in production to avoid Mixed Content errors
+if (
+  typeof window !== 'undefined' &&
+  window.location.protocol === 'https:' &&
+  apiBaseUrl.startsWith('http://') &&
+  !apiBaseUrl.includes('localhost') &&
+  !apiBaseUrl.includes('127.0.0.1')
+) {
+  apiBaseUrl = apiBaseUrl.replace('http://', 'https://');
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api',
+  baseURL: apiBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -9,6 +22,15 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    if (
+      typeof window !== 'undefined' &&
+      window.location.protocol === 'https:' &&
+      config.baseURL &&
+      config.baseURL.startsWith('http://') &&
+      !config.baseURL.includes('localhost')
+    ) {
+      config.baseURL = config.baseURL.replace('http://', 'https://');
+    }
     const token = localStorage.getItem('token');
     if (token && (token.startsWith('mock-') || token.length < 20)) {
       localStorage.removeItem('token');
